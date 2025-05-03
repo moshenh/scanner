@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Html-Qrcode Demo</title>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <style>
+      #qr-reader {
+        width: 500px;
+        margin: auto;
+      }
+      #qr-reader-results {
+        margin-top: 20px;
+        font-size: 18px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Scan a QR Code</h2>
+    <div id="qr-reader"></div>
+    <div id="qr-reader-results">Waiting for scan...</div>
+
+    <script>
+      function onScanSuccess(decodedText, decodedResult) {
+        console.log(`Scanned: ${decodedText}`);
+        document.getElementById(
+          "qr-reader-results"
+        ).innerText = `Scanned: ${decodedText}`;
+
+        // Optional: Send result to parent page (if embedded in Wix or iframe)
+        window.parent.postMessage({ type: "barcode", code: decodedText }, "*");
+      }
+
+      function onScanFailure(error) {
+        // Optionally log scanning errors (frequent)
+        // console.warn(`Scan error: ${error}`);
+      }
+
+      const html5QrcodeScanner = new Html5QrcodeScanner(
+        "qr-reader",
+        { fps: 10, qrbox: 250 },
+        false
+      );
+      html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    </script>
+  </body>
+</html>
